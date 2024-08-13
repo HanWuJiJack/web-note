@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>国家发生大事灰色效果</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #282c34;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        /* html {
+            filter: grayscale(100%);
+        } */
+
+        .rhythmic-glow {
+            width: 200px;
+            height: 200px;
+            background-color: #333;
+            border-radius: 10px;
+            box-shadow:
+                0 0 10px 5px rgba(255, 255, 255, 0.8),
+                /* White glow */
+                0 0 20px 10px rgba(255, 255, 255, 0.6),
+                0 0 30px 15px rgba(255, 255, 255, 0.4);
+            animation: rhythmic-flash 3s linear infinite;
+            /* Apply rhythmic flashing animation */
+        }
+
+        @keyframes rhythmic-flash {
+            0% {
+                box-shadow:
+                    0 0 10px 5px rgba(255, 255, 255, 0.8),
+                    /* White glow */
+                    0 0 20px 10px rgba(255, 255, 255, 0.6),
+                    0 0 30px 15px rgba(255, 255, 255, 0.4);
+            }
+
+            50% {
+                box-shadow:
+                    0 0 5px 0px rgba(255, 255, 255, 0.8),
+                    /* White glow */
+                    0 0 10px 0px rgba(255, 255, 255, 0.6),
+                    0 0 15px 0px rgba(255, 255, 255, 0.4);
+            }
+
+            100% {
+                box-shadow:
+                    0 0 10px 5px rgba(255, 255, 255, 0.8),
+                    /* White glow */
+                    0 0 20px 10px rgba(255, 255, 255, 0.6),
+                    0 0 30px 15px rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        .mask {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            backdrop-filter: grayscale(100%);
+            /* pointer-events: none; */
+            overflow: hidden;
+            /* border-left: 10px solid #ccc; */
+        }
+
+        .frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 10px;
+            background-color: #ccc;
+            cursor: col-resize;
+        }
+
+        .sanbox {
+            position: relative;
+            width: 100vw;
+            min-height: 100vh;
+            text-align: center;
+            /* display: flex; */
+            /* justify-content: center; */
+            /* align-content: center; */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="sanbox" class="sanbox">
+        <div class="mask" id="mask">
+            <div class="frame" id="frame"></div>
+        </div>
+        <div class="rhythmic-glow">5555555555</div>
+        <img src="https://gips0.baidu.com/it/u=838505001,1009740821&fm=3028&app=3028&f=PNG&fmt=auto&q=100&size=f254_80"
+            alt="">
+    </div>
+    <script type="text/javascript">
+        var frame = document.getElementById("frame")
+        var mask = document.getElementById("mask")
+        var sanbox = document.getElementById("sanbox")
+        var move = false
+
+
+        function sanboxmousemove(e) {
+            if (move) {
+                const width = document.documentElement.clientWidth;
+                const end = width - e.pageX
+                mask.style.width = `${end}px`;
+                console.log(end)
+            }
+        }
+
+        function framemousedown(e) {
+            if (e.button !== 0) {//如果不是鼠标左键
+                return;
+            }
+            move = true
+        }
+        function framemouseup(e) {
+            if (e.button !== 0) {//如果不是鼠标左键
+                return;
+            }
+            move = false
+        }
+        function sanboxmouseenter(e) {
+            sanbox.addEventListener("mousemove", sanboxmousemove)
+            frame.addEventListener("mousedown", framemousedown)
+            frame.addEventListener("mouseup", framemouseup)
+        }
+
+        function sanboxmouseleave(e) {
+            const width = document.documentElement.clientWidth;
+            if (move && (width - e.pageX < 10)) {
+                mask.style.width = `${10}px`;
+            }
+            if (move && (width - e.pageX > width - 10)) {
+                mask.style.width = `${width}px`;
+            }
+            move = false
+            sanbox.removeEventListener("mousemove", sanboxmousemove)
+            frame.removeEventListener("mousedown", framemousedown)
+            frame.removeEventListener("mouseup", framemouseup)
+        }
+        sanbox.addEventListener("mouseenter", sanboxmouseenter)
+        sanbox.addEventListener("mouseleave", sanboxmouseleave)
+        window.addEventListener("resize", (e) => {
+            const width = document.documentElement.clientWidth;
+            mask.style.width = `50%`;
+        })
+    </script>
+</body>
+
+</html>
