@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>翻页-时分秒</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            background-color: #000;
+        }
+
+        #hour {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin-right: 10px;
+        }
+
+        #minutes {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin-right: 10px;
+        }
+
+        #seconds {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .card {
+            position: absolute;
+            left: 0;
+            background-color: #000;
+        }
+
+        .line {
+            height: 6px;
+            width: 100%;
+            background-color: #000;
+            position: absolute;
+            top: 37px;
+            left: 0;
+            z-index: 5;
+
+        }
+
+        .card1 {
+            top: 0px;
+            width: 80px;
+            height: 40px;
+            z-index: 1;
+            overflow: hidden;
+            /* background-color: #3f87a6; */
+        }
+
+        .card1 .span1 {
+            display: inline-block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 80px;
+            height: 80px;
+            color: #fff;
+            font-size: 60px;
+            line-height: 80px;
+            text-align: center;
+            will-change: contents;
+        }
+
+        .card1 .span1 span {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: inline-block;
+            font-size: 60px;
+            line-height: 80px;
+            text-align: center;
+            width: 80px;
+            background: linear-gradient(217deg, rgba(255, 0, 0, .8), rgba(255, 0, 0, 0) 70.71%),
+                linear-gradient(127deg, rgba(0, 255, 0, .8), rgba(0, 255, 0, 0) 70.71%),
+                linear-gradient(336deg, rgba(0, 0, 255, .8), rgba(0, 0, 255, 0) 70.71%);
+            /* -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; */
+            /* background-color: #3f87a6; */
+            /* background-size: 200% 200%; */
+            /* animation: gradientAnimation 5s infinite linear; */
+        }
+
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .card2-active {
+            transition: 0.5s;
+            z-index: 4 !important;
+            transform: rotateX(0deg) !important;
+        }
+
+        .card2 {
+            top: 40px;
+            width: 80px;
+            height: 40px;
+            /* background-color: #f69d3c; */
+            z-index: 3;
+            overflow: hidden;
+            transform-origin: top;
+            backface-visibility: hidden;
+            transform: rotateX(180deg);
+            /* border: 1px solid #f69d3c; */
+        }
+
+        .card2 .span2 {
+            position: absolute;
+            left: 0;
+            top: -40px;
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            color: #fff;
+            font-size: 60px;
+            line-height: 80px;
+            text-align: center;
+            will-change: contents;
+        }
+
+        .card2 .span2 span {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: inline-block;
+            font-size: 60px;
+            line-height: 80px;
+            text-align: center;
+            width: 80px;
+            background: linear-gradient(217deg, rgba(255, 0, 0, .8), rgba(255, 0, 0, 0) 70.71%),
+                linear-gradient(127deg, rgba(0, 255, 0, .8), rgba(0, 255, 0, 0) 70.71%),
+                linear-gradient(336deg, rgba(0, 0, 255, .8), rgba(0, 0, 255, 0) 70.71%);
+            /* -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-color: #f69d3c;
+            background-size: 200% 200%;
+            animation: gradientAnimation 5s infinite linear; */
+        }
+
+        .card3-active {
+            transition: 0.5s;
+            transform: rotateX(180deg) !important;
+        }
+
+        .card3 {
+            top: 0px;
+            width: 80px;
+            height: 40px;
+            overflow: hidden;
+            z-index: 2;
+            /* background-color: #3f87a6; */
+            transform-origin: bottom;
+            backface-visibility: hidden;
+            transform: rotateX(0deg);
+        }
+
+        .card3 .span3 {
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 80px;
+            color: #fff;
+            font-size: 60px;
+            line-height: 80px;
+            text-align: center;
+            will-change: contents;
+        }
+
+        .card3 .span3 span {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: inline-block;
+            font-size: 60px;
+            line-height: 80px;
+            text-align: center;
+            width: 80px;
+            /* background-color: #3f87a6; */
+            background: linear-gradient(217deg, rgba(255, 0, 0, .8), rgba(255, 0, 0, 0) 70.71%),
+                linear-gradient(127deg, rgba(0, 255, 0, .8), rgba(0, 255, 0, 0) 70.71%),
+                linear-gradient(336deg, rgba(0, 0, 255, .8), rgba(0, 0, 255, 0) 70.71%);
+            /* -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientAnimation 5s infinite linear; */
+        }
+
+        .card4 {
+            top: 40px;
+            width: 80px;
+            height: 40px;
+            /* background-color: #f69d3c; */
+            z-index: 2;
+            overflow: hidden;
+            transform-origin: top;
+        }
+
+        .card4 .span4 {
+            position: absolute;
+            left: 0;
+            top: -40px;
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            color: #fff;
+            will-change: contents;
+        }
+
+        .card4 .span4 span {
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: inline-block;
+            font-size: 60px;
+            line-height: 80px;
+            text-align: center;
+            width: 80px;
+            /* background-color: #f69d3c; */
+            background: linear-gradient(217deg, rgba(255, 0, 0, .8), rgba(255, 0, 0, 0) 70.71%),
+                linear-gradient(127deg, rgba(0, 255, 0, .8), rgba(0, 255, 0, 0) 70.71%),
+                linear-gradient(336deg, rgba(0, 0, 255, .8), rgba(0, 0, 255, 0) 70.71%);
+            /* -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientAnimation 5s infinite linear; */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="hour">
+            <div class="card card1">
+                <span class="span1">
+                </span>
+            </div>
+            <div class="line"></div>
+            <div class="card card2">
+                <span class="span2">
+                </span>
+            </div>
+            <div class="card card3">
+                <span class="span3">
+                </span>
+            </div>
+            <div class="card card4">
+                <span class="span4">
+                </span>
+            </div>
+        </div>
+        <div id="minutes">
+            <div class="line"></div>
+            <div class="card card1">
+                <span class="span1">
+                </span>
+            </div>
+            <div class="card card2">
+                <span class="span2">
+                </span>
+            </div>
+            <div class="card card3">
+                <span class="span3">
+                </span>
+            </div>
+            <div class="card card4">
+                <span class="span4">
+                </span>
+            </div>
+        </div>
+        <div id="seconds">
+            <div class="line"></div>
+            <div class="card card1">
+                <span class="span1">
+                </span>
+            </div>
+            <div class="card card2">
+                <span class="span2">
+                </span>
+            </div>
+            <div class="card card3">
+                <span class="span3">
+                </span>
+            </div>
+            <div class="card card4">
+                <span class="span4">
+                </span>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    window.onload = function () {
+        function block(id) {
+            var lock = false
+            var card1 = document.querySelectorAll(`#${id} > .card1`)[0];
+            var card2 = document.querySelectorAll(`#${id} > .card2`)[0];
+            var card3 = document.querySelectorAll(`#${id} > .card3`)[0];
+            var card4 = document.querySelectorAll(`#${id} > .card4`)[0];
+            var span1 = document.querySelectorAll(`#${id} > .card1 > .span1`)[0];
+            var span2 = document.querySelectorAll(`#${id} > .card2 > .span2`)[0];
+            var span3 = document.querySelectorAll(`#${id} > .card3 > .span3`)[0];
+            var span4 = document.querySelectorAll(`#${id} > .card4 > .span4`)[0];
+            console.dir(span1)
+            var nodeArr = []
+            var threshold = 59 // 阈值 小时为 23  分钟 秒 为59
+            if (id == "hour") {
+                threshold = 23
+            }
+            do {
+                let index = nodeArr.length + 1
+                nodeArr.push(`<span>${index > 9 ? "" : "0"}${index}</span>`)
+            } while (nodeArr.length <= threshold)
+            let str = nodeArr.join("")
+            span1.innerHTML = str
+            span2.innerHTML = str
+            span3.innerHTML = str
+            span4.innerHTML = str
+            // console.log(str)
+            // const height = span1.offsetHeight; // 触发回流
+            const allSpans1 = document.querySelectorAll(`#${id} > .card1 > .span1 > span`);
+            const allSpans2 = document.querySelectorAll(`#${id} > .card2 > .span2 > span`);
+            const allSpans3 = document.querySelectorAll(`#${id} > .card3 > .span3 > span`);
+            const allSpans4 = document.querySelectorAll(`#${id} > .card4 > .span4 > span`);
+            // console.dir(allSpans1)
+            allSpans1.forEach(node => {
+                node.style.transform = `scale(0)`;
+                // node.style["opacity"] = `0`;
+            })
+            allSpans2.forEach(node => {
+                node.style.transform = `scale(0)`;
+                // node.style["opacity"] = `0`;
+            })
+            allSpans3.forEach(node => {
+                node.style.transform = `scale(0)`;
+                // node.style["opacity"] = `0`;
+            })
+            allSpans4.forEach(node => {
+                node.style.transform = `scale(0)`;
+                // node.style["opacity"] = `0`;
+            })
+            // var progress = 0;
+            // var huizhi = 0
+            var nowTime;
+            function renderarea(nowTime) {
+                const curTime = nowTime
+                let nextTime = nowTime + 1
+                let preTime = nowTime - 1
+                if (curTime == threshold) {
+                    nextTime = 0
+                }
+                if (curTime == 0) {
+                    preTime = threshold
+                }
+                // console.log(getComputedStyle(card2).transform)
+                //回调函数
+                function render() {
+                    // console.log(getComputedStyle(card2)['z-index'])
+                    card2.classList.add('card2-active');
+                    card3.classList.add('card3-active');
+                    function checkAnimationEnd() {
+                        // console.log(getComputedStyle(card2)['z-index'])
+                        if (getComputedStyle(card2)['z-index'] == 4) {
+                            setTimeout(() => {
+                                allSpans1.forEach(node => {
+                                    node.style.transform = `scale(0)`;
+                                })
+                                allSpans2.forEach(node => {
+                                    node.style.transform = `scale(0)`;
+                                })
+                                allSpans3.forEach(node => {
+                                    node.style.transform = `scale(0)`;
+                                })
+                                allSpans4.forEach(node => {
+                                    node.style.transform = `scale(0)`;
+                                })
+                                allSpans3[curTime].style.transform = `scale(1)`;
+                                allSpans4[curTime].style.transform = `scale(1)`;
+                                card2.classList.remove('card2-active');
+                                card3.classList.remove('card3-active');
+                                allSpans1[nextTime].style.transform = `scale(1)`;
+                                allSpans2[nextTime].style.transform = `scale(1)`;
+                            }, 500)
+                            return
+                        }
+                        requestAnimationFrame(checkAnimationEnd);
+                    }
+                    requestAnimationFrame(checkAnimationEnd);
+                }
+                return render
+            }
+
+
+            function requestAnimationFrameFunc() {
+                var myDate = new Date();
+                var curTime = 0
+                if (id == "hour") {
+                    curTime = myDate.getHours()
+                }
+                if (id == "minutes") {
+                    curTime = myDate.getMinutes()
+                }
+                if (id == "seconds") {
+                    curTime = myDate.getSeconds()
+                }
+                if (nowTime != 0 && !nowTime) {
+                    // console.log("one") 初始化 显示值
+                    nowTime = curTime;
+                    var nextTime = nowTime + 1
+                    let preTime = nowTime - 1
+                    if (nowTime == threshold) {
+                        nextTime = 0
+                    }
+                    if (nowTime == 0) {
+                        preTime = threshold
+                    }
+                    allSpans1[curTime].style.transform = `scale(1)`;
+                    allSpans2[curTime].style.transform = `scale(1)`;
+                    allSpans3[preTime].style.transform = `scale(1)`;
+                    allSpans4[preTime].style.transform = `scale(1)`;
+                    window.requestAnimationFrame(requestAnimationFrameFunc);
+                    return
+                }
+                if (nowTime != curTime) {
+                    nowTime = curTime;
+                    var nextTime = nowTime + 1
+                    let preTime = nowTime - 1
+                    if (nowTime == threshold) {
+                        nextTime = 0
+                    }
+                    if (nowTime == 0) {
+                        preTime = threshold
+                    }
+                    window.requestAnimationFrame(renderarea(preTime));
+                }
+                if (!lock) {
+                    window.requestAnimationFrame(requestAnimationFrameFunc);
+                }
+            }
+            return {
+                stop() {
+                    lock = true
+                },
+                start() {
+                    nowTime = undefined
+                    lock = false
+                    window.requestAnimationFrame(requestAnimationFrameFunc);
+                }
+            }
+        }
+        const hour = block("hour")
+        const minutes = block("minutes")
+        const seconds = block("seconds")
+        hour.start()
+        minutes.start()
+        seconds.start()
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'hidden') {
+                console.log('Tab is hidden');
+                hour.stop()
+                minutes.stop()
+                seconds.stop()
+                // Handle the event when the tab is hidden
+            } else if (document.visibilityState === 'visible') {
+                console.log('Tab is visible');
+                hour.start()
+                minutes.start()
+                seconds.start()
+                // Handle the event when the tab is visible
+            }
+        });
+    }
+
+</script>
+
+</html>
