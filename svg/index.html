@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>svgCanvas</title>
+    <!-- 引入 CryptoJS 库作为备用 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+
+<body>
+    <!-- 
+        cx 圆心 x
+        cy 圆心 y
+        r 圆半径
+        stroke 描边
+        stroke-width 描边宽度
+        fill 填充
+     -->
+    <svg width="100" height="100">
+        <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+    </svg>
+
+    <!-- 
+    stroke-dasharray:
+    单一值: 定义了虚线的长度。例如，stroke-dasharray="10" 表示每个虚线段的长度为10个单位。
+    多个值: 定义了虚线的长短交替模式。例如，stroke-dasharray="10,5" 表示线段长度为10个单位，间隔长度为5个单位。
+
+
+    stroke-dashoffset 偏移
+ -->
+    <svg width="100" height="100">
+        <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" stroke-dasharray="300"
+            stroke-dashoffset="300">
+            <animate attributeName="stroke-dashoffset" from="300" to="0" dur="3s" repeatCount="indefinite" />
+        </circle>
+    </svg>
+
+    <svg width="100" height="100">
+        <circle id="myPathCircle" cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow">
+        </circle>
+    </svg>
+
+
+    <!-- <script>
+        const path = document.getElementById('myPathCircle');
+        const pathLength = path.getTotalLength();
+
+        // 设置 stroke-dasharray 和 stroke-dashoffset
+        path.setAttribute('stroke-dasharray', pathLength);
+        path.setAttribute('stroke-dashoffset', pathLength);
+
+        // 创建动画
+        const animate = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+        animate.setAttribute("attributeName", "stroke-dashoffset");
+        animate.setAttribute("from", pathLength);
+        animate.setAttribute("to", "0");
+        animate.setAttribute("dur", "3s");
+        // animate.setAttribute("repeatCount", "indefinite");
+        animate.setAttribute("repeatCount", "1");
+        animate.setAttribute("fill", "freeze");
+        path.appendChild(animate);
+    </script> -->
+
+    <svg width="300" height="100" xmlns="http://www.w3.org/2000/svg">
+        <!-- 动态描边的汉字 -->
+        <text id="myPathText" x="10" y="40" font-family="Arial" font-size="40" stroke="black" stroke-width="2" fill="white">
+            金
+            <!-- <animate attributeName="stroke-dashoffset" from="200" to="0" dur="3s" repeatCount="1" fill="freeze" /> -->
+        </text>
+    </svg>
+
+
+    <script>
+        const pathText = document.getElementById('myPathText');
+        console.dir(pathText)
+        const pathLengthText = pathText.getTotalLength();
+        console.log("pathLength",pathLength)
+        // 设置 stroke-dasharray 和 stroke-dashoffset
+        pathText.setAttribute('stroke-dasharray', pathLengthText);
+        pathText.setAttribute('stroke-dashoffset', pathLengthText);
+
+        // 创建动画
+        const animateText = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+        animateText.setAttribute("attributeName", "stroke-dashoffset");
+        animateText.setAttribute("from", pathLengthText);
+        animateText.setAttribute("to", "0");
+        animateText.setAttribute("dur", "3s");
+        // animateText.setAttribute("repeatCount", "indefinite");
+        animateText.setAttribute("repeatCount", "1");
+        animateText.setAttribute("fill", "freeze");
+        pathText.appendChild(animateText);
+    </script>
+
+    <!-- 矩形 
+    
+    opacity 整个元素透明度
+    fill-opacity 填充透明度
+    stroke-opacity 描边透明度
+    x 属性定义矩形的左侧位置（例如 x="50" 将矩形放置在距左外边距 50 px 的位置）
+    y 属性定义矩形的顶部位置（例如 y="20" 将矩形放置在距上外边距 20 px 的位置）
+
+    rx 和 ry 属性使矩形的角变圆
+    rx="20"
+    ry="20"
+    -->
+    <svg width="400" height="400">
+        <rect x="10" y="10" width="100" height="100" rx="10" ry="10"
+            style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+    </svg>
+
+
+
+    <!-- 
+    椭圆
+    cx 属性定义椭圆中心的 x 坐标
+    cy 属性定义椭圆中心的 y 坐标
+    rx 属性定义水平半径
+    ry 属性定义垂直半径
+    -->
+    <svg height="140" width="500">
+        <ellipse cx="200" cy="80" rx="100" ry="50" style="fill:yellow;stroke:purple;stroke-width:2" />
+    </svg>
+
+    <!--
+    一条线 
+    x1 属性定义 x 轴上的线的起点
+    y1 属性定义 y 轴上的线的起点
+    x2 属性定义 x 轴上的线的终点
+    y2 属性定义 y 轴上的线的终点
+    -->
+    <svg height="210" width="500">
+        <line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
+    </svg>
+
+    <!--
+        按照 path路径移动
+        rotate 线角度
+    -->
+
+    <svg width="500" height="200" xmlns="http://www.w3.org/2000/svg">
+        <!-- SVG路径 -->
+        <path id="myPathOne" d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" stroke="black" stroke-width="10"
+            fill="transparent" />
+
+        <!-- 线条沿路径移动 -->
+        <line x1="0" y1="0" x2="5" y2="0" style="stroke:rgb(255,0,0);stroke-width:8">
+            <animateMotion repeatCount="indefinite" dur="4s" rotate="auto">
+                <mpath href="#myPathOne" />
+            </animateMotion>
+        </line>
+    </svg>
+
+
+
+
+
+
+
+
+
+
+
+    <svg id="svgCanvas" width="500" height="200" xmlns="http://www.w3.org/2000/svg" style="border:1px solid #ccc">
+        <!-- SVG路径 -->
+        <path id="myPath" d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" stroke="black" fill="transparent" />
+    </svg>
+
+
+
+    <script>
+        // 获取SVG和路径元素
+        const svg = document.getElementById('svgCanvas');
+        const path = document.getElementById('myPath');
+        // 计算路径的总长度
+        const pathLength = path.getTotalLength();
+        // 设置小球的数量
+        const ballCount = 5;
+        // 计算每个小球之间的间隔
+        const interval = pathLength / (ballCount - 1);
+        // 为每个小球创建动画
+        for (let i = 0; i < ballCount; i++) {
+            const ball = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            ball.setAttribute("r", 5);
+            ball.setAttribute("fill", "red");
+
+            const animateMotion = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
+            animateMotion.setAttribute("repeatCount", "indefinite");
+            animateMotion.setAttribute("dur", "5s");
+            animateMotion.setAttribute("begin", `${i * 1}s`); // 每个小球的动画延迟
+
+            const mpath = document.createElementNS("http://www.w3.org/2000/svg", "mpath");
+            mpath.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#myPath");
+
+            animateMotion.appendChild(mpath);
+            ball.appendChild(animateMotion);
+            svg.appendChild(ball);
+        }
+    </script>
+</body>
+
+</html>

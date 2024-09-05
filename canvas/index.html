@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>canvas</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        #canvas {
+            border: 1px solid #d3d3d3;
+            background-color: #f1f1f1;
+            /* position: fixed; */
+            /* top: -100%; */
+            /* width: 500px;
+            height: 500px; */
+        }
+
+        body {
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script async>
+        // 获取设备像素比
+        let dpr = window.devicePixelRatio || 1;
+        let canvasWidth = window.innerWidth;
+        let canvasHeight = window.innerHeight;
+        const canvas = document.getElementById("canvas")
+        // 设置canvas的实际像素尺寸
+        canvas.width = canvasWidth * dpr;    // 实际宽度为CSS宽度乘以DPR
+        canvas.height = canvasHeight * dpr;  // 实际高度为CSS高度乘以DPR
+        const ctx = canvas.getContext("2d")
+
+        // 将canvas绘制比例调整为1
+        ctx.scale(dpr, dpr);
+        // 直线
+        ctx.beginPath()
+        ctx.moveTo(0, 0)
+        ctx.lineTo(200, 200)
+        ctx.lineTo(400, 200)
+        ctx.closePath() //闭合路径
+
+
+
+        ctx.lineWidth = 10; //lineWidth 属性定义在画布中绘制时要使用的线条宽度。
+        ctx.strokeStyle = "red";
+        ctx.lineCap = "round"; // lineCap 属性定义线的端部样式（butt、round 或 square）。
+        ctx.stroke();//描边 // ctx.fill() 填充
+
+        // 矩形
+
+        ctx.beginPath()
+        ctx.rect(1, 50, 20, 30) //context.rect(x, y, width, height)
+
+        ctx.lineWidth = 1
+        ctx.stroke()
+
+        // 圆弧 和 圆
+
+        ctx.beginPath()
+        ctx.arc(50, 200, 10, Math.PI, 2 * Math.PI) //arc(x,y,r,start,end) - 定义圆 要创建圆，
+        // 请将起始角度设置为 0，结束角度设置为 2 * Math.PI。
+        //x 和 y 参数定义圆心的坐标。
+        //r 参数定义圆的半径。
+        ctx.stroke()
+        // 文字
+        ctx.beginPath()
+        ctx.font = "30px Arial";
+        ctx.fillText("Hello World", 10, 50);
+
+
+        // 图像
+        // ctx.drawImage(img, 10, 10);
+        // context.drawImage(img,x,y,width,height);
+        
+        // context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
+        //         img	规定要使用的图像、画布或视频。
+        // sx	可选。开始剪切的 x 坐标位置。
+        // sy	可选。开始剪切的 y 坐标位置。
+        // swidth	可选。被剪切图像的宽度。
+        // sheight	可选。被剪切图像的高度。
+        // x	在画布上放置图像的 x 坐标位置。
+        // y	在画布上放置图像的 y 坐标位置。
+        // width	可选。要使用的图像的宽度。（伸展或缩小图像）
+        // height	可选。要使用的图像的高度。（伸展或缩小图像）
+
+
+        // 填充矩形 
+        ctx.fillStyle = "red";
+        ctx.fillRect(20, 20, 150, 100);
+        ctx.save()
+        // 剪切矩形区域
+        ctx.rect(0, 50, 200, 120);
+        ctx.stroke();
+        ctx.clip(); // 从原始画布中剪裁任意形状和大小的区域。
+        ctx.fillStyle = "green";
+        ctx.fillRect(0, 0, 150, 100);
+
+        ctx.restore()
+
+        // 二次贝塞尔曲线：
+        ctx.beginPath()
+        ctx.moveTo(200, 200)
+        ctx.quadraticCurveTo(20, 100, 200, 20);
+        ctx.stroke()
+    </script>
+</body>
+
+</html>

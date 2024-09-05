@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>弹跳</title>
+    <style>
+        #canvas {
+            background-color: #03ffff;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <button id="start">开始</button>
+    <button id="stop">暂停</button>
+</body>
+<script async>
+
+    let width = 500 //游戏界面
+    let height = 500 //游戏界面
+    let y = 0 //小块位置
+    let v = 0
+    // var g = 9.8;
+    var g = 1;
+    let x = 100 //小块位置
+    let size = 50
+    let bounce = 0.7  // 弹性系数 (0 到 1，值越小，弹跳越低)
+    let startTime = Math.floor(Date.now() / 1000)
+    const canvas = document.getElementById("canvas")
+    const startButton = document.getElementById("start")
+    const stopButton = document.getElementById("stop")
+
+    canvas.width = width
+    canvas.height = height
+    const ctx = canvas.getContext("2d");
+    function run() {
+        let nowTime = Math.floor(Date.now() / 1000)
+        let time = nowTime - startTime
+        v += g * time
+        y += v * time;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.fillStyle = "#000000";
+        if (y > canvas.height - size) {
+            y = canvas.height - size; // 位置修正，确保小球不穿过地面
+            v = -v * bounce;        // 反弹并减速
+        }
+        ctx.fillRect(x, y, size, size);
+        window.requestAnimationFrame(run);
+    }
+
+    function start() {
+        startTime = Math.floor(Date.now() / 1000)
+        window.requestAnimationFrame(run);
+    }
+
+    function _stop() {
+        stop = true
+    }
+    startButton.addEventListener("click", start)
+    stopButton.addEventListener("click", _stop)
+
+</script>
+
+</html>

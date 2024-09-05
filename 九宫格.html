@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .grid-container {
+            width: 300px;
+            height: 300px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            /* 可选: 设置格子之间的间距 */
+        }
+
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            /* height: 100px; */
+            /* 高度自定义 */
+            background-color: #ccc;
+        }
+
+        .grid-item-double {
+            /* 横着 */
+            /* grid-column: span 2; */
+            /* 竖着占两行 */
+            grid-row: span 2;
+            background-color: aqua;
+            /* 占两列 */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-container">
+        <div class="grid-item">1</div>
+        <div class="grid-item">2</div>
+        <div class="grid-item">3</div>
+        <div class="grid-item grid-item-double">4</div> <!-- 占两个格子 -->
+        <div class="grid-item">5</div>
+        <div class="grid-item">6</div>
+        <div class="grid-item">7</div>
+        <div class="grid-item">8</div>
+        <!-- <div class="grid-item">9</div> -->
+    </div>
+</body>
+
+</html>

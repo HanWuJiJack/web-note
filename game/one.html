@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏1</title>
+    <style>
+        #canvas {
+            background-color: #03ffff;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <button id="start">开始</button>
+    <button id="stop">暂停</button>
+</body>
+<script async>
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    // 只需要检查 x点是否重合
+    function isRectColliding(rect1, rect2) {
+        return rect1.x < rect2.x + rect2.width &&
+            rect1.x + rect1.width > rect2.x &&
+            rect1.y < rect2.y + rect2.height &&
+            rect1.y + rect1.height > rect2.y;
+    }
+    let width = 1000 //游戏界面
+    let height = 200 //游戏界面
+    let y = 0 //小块位置
+    let x = 0 //小块位置
+    let stop = true
+    let qArr = []  // 墙位置
+    let ql = 300  //间隔多远添加一面墙
+    let qt = 50 //上下墙距离
+    let size = 50
+    let speed = 1
+    let step = size //移动速度
+    let Qstep = 1 //移动速度
+    const canvas = document.getElementById("canvas")
+    const startButton = document.getElementById("start")
+    const stopButton = document.getElementById("stop")
+
+    canvas.width = width
+    canvas.height = height
+    const ctx = canvas.getContext("2d");
+    setInterval(() => {
+        speed++;
+        console.log("当前难度级别：" + speed)
+    }, 10000)
+    function run() {
+        Qstep = 1 * speed
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 添加新的墙
+        const end = qArr[qArr.length - 1]
+        if (width - end.qx > ql) {
+            qArr.push({
+                qx: width,
+                qy: getRandomInt(0, (height - size) / size) * size
+            })
+        }
+        // 删除的墙
+        const start = qArr[0]
+        if (start.qx < 0) {
+            qArr.shift()
+        }
+        // 移动墙
+        qArr.forEach(item => {
+            item.qx = item.qx - Qstep
+            return item
+        })
+
+        let rect1 = { x: x, y: y, width: size, height: size };
+        let isPengZhuang = []
+        // ctx.stroke();
+        qArr.forEach(item => {
+            ctx.beginPath();
+            ctx.fillStyle = "#ff0000";
+            ctx.fillRect(item.qx, -height + item.qy, size, height);
+            let rect2 = { x: item.qx, y: -height + item.qy, width: size, height: height };
+
+            ctx.beginPath();
+            ctx.fillStyle = "#ff0000";
+            ctx.fillRect(item.qx, item.qy + qt, size, height);
+            let rect3 = { x: item.qx, y: item.qy + qt, width: size, height: height };
+            // console.log(1,isRectColliding(rect1, rect2))
+            // console.log(2,isRectColliding(rect1, rect3))
+            if (isRectColliding(rect1, rect2) || isRectColliding(rect1, rect3)) {
+                // console.log("碰撞了！")
+                alert("当前难度级别：" + speed)
+                _stop()
+                return
+            }
+        })
+        ctx.fillStyle = "#000000";
+        ctx.beginPath();
+        ctx.fillRect(x, y, size, size);
+        if (!stop) {
+            window.requestAnimationFrame(run);
+        }
+    }
+
+    function start() {
+        if (!stop) {
+            return
+        }
+        speed = 1
+        y = 0
+        x = 0
+        qArr = []
+        if (qArr.length == 0) {
+            qArr.push({
+                qx: width,
+                qy: getRandomInt(0, (height - size) / size) * size
+            })
+        }
+        stop = false
+        window.requestAnimationFrame(run);
+    }
+
+    function _stop() {
+        stop = true
+    }
+    startButton.addEventListener("click", start)
+    stopButton.addEventListener("click", _stop)
+    // start()
+    document.addEventListener('keydown', function (event) {
+        let output = document.getElementById('output');
+        switch (event.key) {
+            case 'ArrowUp':
+                if (y > 0) {
+                    y -= step
+                }
+                break;
+            case 'ArrowDown':
+                if (y < height) {
+                    y += step
+                }
+                break;
+            case 'ArrowLeft':
+                if (x > 0) {
+                    x -= step
+                }
+                break;
+            case 'ArrowRight':
+                if (x < width) {
+                    x += step
+                }
+                break;
+        }
+    });
+</script>
+
+</html>

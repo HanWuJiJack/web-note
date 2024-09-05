@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>翻页-时分秒</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        ul,
+        li {
+            list-style: none;
+            padding: 0px;
+            margin: 0px;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            background-color: #000;
+        }
+
+        #box {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: space-around;
+            align-content: space-around;
+            width: 600px;
+            height: 600px;
+        }
+
+        #box li {
+            flex: 0 0 30%;
+            /* 每个单元格占三分之一的宽度 */
+            background-color: #fff;
+            height: 150px;
+            transition: all .5s;
+            box-shadow: 0 0 5px 5px rgba(255, 255, 255, 0.8);
+        }
+
+        .li-active {
+            /* animation: gradientAnimation 1s infinite linear; */
+            z-index: 2;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px 10px rgba(255, 255, 255, 0.8) !important;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <ul id="box">
+        </ul>
+    </div>
+</body>
+<script type="text/javascript">
+    function getRandomInt() {
+        return Math.floor(Math.random() * 9);
+    }
+    window.onload = function () {
+        var box = document.querySelectorAll(`#box`)[0]
+        var nodeArr = []
+        do {
+            let index = nodeArr.length + 1
+            nodeArr.push(`<li>${index > 9 ? "" : "0"}${index}</li>`)
+        } while (nodeArr.length < 9)
+        let str = nodeArr.join("")
+        console.log(str)
+        console.log(box)
+        box.innerHTML = str
+        const allli = document.querySelectorAll(`#box > li`);
+        // .addli
+        console.log(allli.length)
+
+        function change(el, cb) {
+            el.classList.add('li-active');
+            function checkAnimationEnd() {
+                if (getComputedStyle(el)['z-index'] == 2) {
+                    cb(el)
+                    return
+                }
+                requestAnimationFrame(checkAnimationEnd);
+            }
+            requestAnimationFrame(checkAnimationEnd);
+        }
+        // let oldInt;
+
+        // // 随机执行
+        // function anime() {
+        //     setTimeout(() => {
+        //         let int = getRandomInt()
+        //         while (oldInt === int) {
+        //             int = getRandomInt()
+        //         }
+        //         const el = allli[int]
+        //         console.log(int)
+        //         console.log(el)
+        //         change(el, () => {
+        //             anime()
+        //         })
+
+        //     }, 500)
+        // }
+        // anime()
+
+        // 顺序执行
+        let int = 0
+        let times = 0
+        let result = 6
+        let loop = 3
+        let end = loop * 9 + result
+        let speed = 1000
+
+        let door = true
+        // allli[result].classList.add('li-active');
+        function anime() {
+            console.log(times)
+            setTimeout(() => {
+                if (int == 9) {
+                    int = 0
+                }
+                const el = allli[int]
+                change(el, (node) => {
+                    int++;
+                    times++;
+                    if (door) {
+                        if (speed > 200) {
+                            speed = speed - times * 5
+                        } else {
+                            door = false
+                        }
+                    } else {
+                        if (speed < 1000) {
+                            speed = speed + times * 10
+                        } else {
+                            door = true
+                        }
+                    }
+
+                    if (times < end) {
+                        setTimeout(() => {
+                            node.classList.remove('li-active');
+                        }, 500)
+                        anime()
+                    }
+                })
+
+            }, speed)
+        }
+        anime()
+    }
+
+</script>
+
+</html>

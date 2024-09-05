@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate User Fingerprint</title>
+    <!-- 引入 CryptoJS 库作为备用 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+
+<body>
+    <script>
+        async function generateUserFingerprint() {
+            const userAgent = navigator.userAgent;
+            const screenResolution = `${screen.width}x${screen.height}`;
+            const language = navigator.language || navigator.userLanguage;
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const hardwareConcurrency = navigator.hardwareConcurrency;
+
+            const fingerprintString = `${userAgent}-${screenResolution}-${language}-${timezone}-${hardwareConcurrency}`;
+
+            // 检查 SubtleCrypto 是否被支持
+            if (window.crypto && window.crypto.subtle) {
+                console.log("SubtleCrypto is supported");
+                const encoder = new TextEncoder();
+                const data = encoder.encode(fingerprintString);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                return hashHex;
+            } else {
+                console.log("SubtleCrypto is not supported, using CryptoJS as a fallback");
+                // 使用 CryptoJS 生成 SHA-256 哈希作为替代方案
+                return CryptoJS.SHA256(fingerprintString).toString(CryptoJS.enc.Hex);
+            }
+        }
+
+        generateUserFingerprint().then(fingerprint => {
+            console.log("User Fingerprint: ", fingerprint); // 输出生成的用户ID
+        });
+    </script>
+</body>
+
+</html>
