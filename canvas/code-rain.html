@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码雨水</title>
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        #canvas {
+            border: 1px solid #d3d3d3;
+            background-color: #000;
+            overflow: hidden;
+            box-sizing: border-box;
+            margin: 0px;
+            padding: 0px;
+            position: fixed;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+<script async>
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    let pointArr = [];
+    let canvasWidth = window.innerWidth;
+    let canvasHeight = window.innerHeight;
+    const textWidth = 30;  // 每个字符列的宽度
+    const maxLetters = 10;  // 每列中最多的字符数
+
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";  // 可选字母和数字
+
+    // 随机获取一个字母或数字
+    function getRandomChar() {
+        return alphabet.charAt(getRandomInt(0, alphabet.length - 1));
+    }
+
+    // 初始化字符链（代码雨）
+    function initPoints() {
+        pointArr = new Array(Math.floor(canvasWidth / textWidth)).fill(1);
+
+        pointArr = pointArr.map(() => {
+            let vy = getRandomInt(2, 10);  // 下落速度
+            let charChain = new Array(maxLetters).fill("");  // 生成一串随机字母
+            charChain = charChain.map(() => getRandomChar())
+            return {
+                x: getRandomInt(0, canvasWidth / textWidth) * textWidth,  // X轴位置
+                y: getRandomInt(-canvasHeight, 0),  // Y轴初始位置随机
+                vy,  // Y 方向速度
+                charChain  // 字符链
+            };
+        });
+    }
+
+    // 绘制字符链
+    function drawPoints() {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);  // 清除画布
+        ctx.font = "20px monospace";  // 字体设置
+        ctx.fillStyle = "lime";  // 绿色文本
+        ctx.shadowBlur = 10;  // 设置阴影模糊
+        ctx.shadowColor = "lime";  // 绿色阴影
+
+        pointArr.forEach(item => {
+            // 绘制字符链中的每个字母
+            item.charChain.forEach((char, index) => {
+                ctx.fillText(char, item.x, item.y + index * 20);  // 绘制每个字母，垂直排列
+            });
+        });
+    }
+
+    // 更新字符链的下落位置
+    function updatePoints() {
+        pointArr.forEach(point => {
+            point.y += point.vy;  // 更新Y轴位置
+
+            // 更新字符链，当某列的第一个字母完全下落出画布时
+            if (point.y > canvasHeight) {
+                point.y = -maxLetters * 20;  // 让字符链从顶部重新掉落
+                point.vy = getRandomInt(2, 10);  // 随机速度
+                point.charChain = new Array(maxLetters).fill("").map(() => getRandomChar());  // 更新字母链
+            }
+
+            // 更新字符链的字母，每次掉落都会生成新的字母链
+            point.charChain = point.charChain.map((char, index) => {
+                if (getRandomInt(0, 100) < 1) {  // 5%的几率随机改变每个字符
+                    return getRandomChar();
+                }
+                return char;
+            });
+        });
+    }
+
+    // 处理窗口大小变化
+    function handleResize() {
+        canvasWidth = window.innerWidth;
+        canvasHeight = window.innerHeight;
+
+        // 更新 canvas 的宽高
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+
+        // 重新初始化字符链
+        initPoints();
+    }
+
+    // 监听窗口大小变化事件
+    window.addEventListener("resize", handleResize);
+
+    // 动画循环
+    function animate() {
+        updatePoints();   // 更新位置
+        drawPoints();     // 绘制字符链
+        requestAnimationFrame(animate);  // 循环动画
+    }
+
+    // 初始化画布和字符链
+    handleResize();
+    animate();  // 开始动画
+
+</script>
+
+</html>

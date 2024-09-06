@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雪花堆积效果</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body,
+        html {
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let canvasWidth = window.innerWidth;
+        let canvasHeight = window.innerHeight;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+
+        let snowflakes = [];
+        let groundHeight = canvasHeight * 0.8; // 定义地面高度
+        let snowLimitHeight = canvasHeight; // 允许堆积的最大高度
+
+        let g = 0.01 // 加速度
+        let bounce = 0.1  // 弹性系数 (0 到 1，值越小，弹跳越低)
+        // let b = 1 //下落还是上升
+        function createSnowflakes(num) {
+            for (let i = 0; i < num; i++) {
+                snowflakes.push({
+                    x: Math.random() * canvasWidth,
+                    y: -Math.random() * canvasHeight, // 从顶部开始
+                    radius: Math.random() * 5 + 2,
+                    speed: 0,
+                    drift: Math.random() * 1 - 0.5,
+                });
+            }
+        }
+
+        function drawSnowflakes() {
+            ctx.fillStyle = 'white';
+            snowflakes.forEach(flake => {
+                ctx.beginPath();
+                ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // 绘制雪堆
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, groundHeight, canvasWidth, canvasHeight - groundHeight);
+        }
+
+        function updateSnowflakes() {
+            snowflakes.forEach(flake => {
+                flake.speed += g
+                flake.y += flake.speed;
+                flake.x += flake.drift;
+
+                // 当雪花落到地面时固定位置
+                if (flake.y + flake.radius > groundHeight) {
+                    // flake.y = groundHeight - flake.radius;
+                    // b *= -1
+                    flake.speed = flake.speed * -1 * bounce; // 雪花固定不动
+                    if (flake.speed < 1 || flake.speed > -1) {
+                        flake.drift = 0
+                        flake.y = groundHeight - flake.radius;
+                    }
+                }
+                // if (b == -1 && flake.speed > 0) {
+                //     b *= -1
+                //     flake.speed = flake.speed * b
+                // }
+            });
+
+            // 添加新的雪花
+            if (Math.random() < 0.05) {
+                createSnowflakes(10); // 逐渐生成雪花
+            }
+        }
+
+        function animateSnow() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            updateSnowflakes();
+            drawSnowflakes();
+            requestAnimationFrame(animateSnow);
+        }
+
+        window.addEventListener('resize', () => {
+            canvasWidth = window.innerWidth;
+            canvasHeight = window.innerHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            groundHeight = canvasHeight * 0.8;
+        });
+
+        createSnowflakes(200); // 初始生成雪花
+        animateSnow(); // 启动动画
+    </script>
+</body>
+
+</html>
